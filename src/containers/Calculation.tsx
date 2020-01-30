@@ -17,13 +17,11 @@ interface CalculationState {
   }
 }
 
-export const Calculation: React.FC = (_, CalculationState) => {
+export const Calculation: React.FC = () => {
   const [calculation, setCalculation] = useState<CalculationState>({ leftVal: 0, rightVal: 0, operation: undefined })
+  const [result, setResult] = useState<number | undefined>()
   
-  enum Operation {
-    Add,
-    Sub
-  }
+  enum Operation { Add, Sub }
 
   const sum = (leftVal: number, rightVal: number): number => leftVal + rightVal
   const sub = (leftVal: number, rightVal: number): number => leftVal - rightVal
@@ -44,12 +42,29 @@ export const Calculation: React.FC = (_, CalculationState) => {
     })
   }
 
+  const calculateResult = () => {
+    if (calculation.operation)
+      setResult(
+        calculation.operation.fn(calculation.leftVal, calculation.rightVal)
+      )
+  }
+
   return (
     <div>
-      {calculation.operation && (
-        `${calculation.leftVal} ${calculation.operation?.str} ${calculation.rightVal}`
-      )}
-      <button onClick={newCalculation}>{"New"}</button>
+      <div>
+        {calculation.operation && (
+          `${calculation.leftVal} ${calculation.operation?.str} ${calculation.rightVal}`
+        )}
+      </div>
+      <div>
+        {result && 
+          `${result}`
+        }
+      </div>
+      <div>
+        <button onClick={newCalculation}>{"New"}</button>
+        <button onClick={calculateResult}>{"Show result"}</button>
+      </div>
     </div>
   )
 }
