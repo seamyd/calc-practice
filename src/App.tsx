@@ -1,5 +1,5 @@
 import React from 'react';
-import { Assignment } from './containers/Assignment';
+import { Calculation } from './containers/Calculation';
 import styles from './App.module.scss';
 
 const App: React.FC = () => {
@@ -8,7 +8,7 @@ const App: React.FC = () => {
       <header className={styles.appHeader}>
           Leer rekenen
       </header>
-      <Assignment />
+      <Calculation />
     </div>
   );
 }
