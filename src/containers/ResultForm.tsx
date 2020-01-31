@@ -22,7 +22,13 @@ export const ResultForm: React.FC<Props> = ({ checkAnswer }) => {
     <form onSubmit={onSubmit}>
       <label>
         Answer:
-        <input type="text" id="answer" name="answer" value={formState.answer} onChange={handleChange} />
+        <input
+          type="text"
+          id="answer"
+          name="answer"
+          value={formState.answer}
+          autoComplete="off"
+          onChange={handleChange} />
       </label>
       <input type="submit" value="Submit" />
     </form>

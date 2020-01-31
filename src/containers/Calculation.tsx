@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useReducer, useEffect, useRef } from 'react';
 import { ResultForm } from './ResultForm';
 
 function randomEnum<T>(anEnum: T): T[keyof T] {
@@ -7,6 +7,27 @@ function randomEnum<T>(anEnum: T): T[keyof T] {
     .filter(n => !Number.isNaN(n)) as unknown as T[keyof T][]
   const randomIndex = Math.floor(Math.random() * enumValues.length)
   return enumValues[randomIndex]
+}
+
+function usePrevious<T>(value: T) {
+  const ref = useRef<T>()
+  useEffect(() => {
+    ref.current = value
+  })
+  return ref.current
+}
+
+enum Operation { Add, Sub }
+
+const getRandomNumber = (maxValue: number) =>
+  Math.floor(Math.random() * maxValue)
+
+const sum = (leftVal: number, rightVal: number): number => leftVal + rightVal
+const sub = (leftVal: number, rightVal: number): number => leftVal - rightVal
+
+const operator = (op: Operation) => {
+  if (op === Operation.Add) return { fn: sum, str: "+" }
+  return { fn: sub, str: "-" }
 }
 
 interface CalculationState {
@@ -18,62 +39,77 @@ interface CalculationState {
   }
 }
 
+interface State {
+  showPreviousAnswer: boolean
+  correctAnswers?: number
+}
+
 export const Calculation: React.FC = () => {
-  enum Operation { Add, Sub }
-
-  const sum = (leftVal: number, rightVal: number): number => leftVal + rightVal
-  const sub = (leftVal: number, rightVal: number): number => leftVal - rightVal
-
-  const getRandomNumber = (maxValue: number) =>
-    Math.floor(Math.random() * maxValue)
-
-  const operator = (op: Operation) => {
-    if (op === Operation.Add) return { fn: sum, str: "+" }
-    return { fn: sub, str: "-" }
-  }
-
   const [calculation, setCalculation] = useState<CalculationState>({ 
     leftVal: getRandomNumber(20),
     rightVal: getRandomNumber(20),
     operation: operator(randomEnum(Operation))
   })
-  const [correctAnswers, setCorrectAnswers] = useState<number>(0)
-  
+  const [state, setState] = useReducer(
+    (state: State, newState: State) => ({ ...state, ...newState }),
+    { showPreviousAnswer: false, correctAnswers: 0 }
+  )
+  const [answer, setAnswer] = useState<number>()
+  const prevAnswer = usePrevious<number | undefined>(answer)
+
   const calculateResult = (): number | null => {
     if (calculation.operation)
       return calculation.operation.fn(calculation.leftVal, calculation.rightVal)
     return null
   }
 
-  const newCalculation = (): void => {
-    setCalculation({ 
-      leftVal: getRandomNumber(20),
-      rightVal: getRandomNumber(20),
-      operation: operator(randomEnum(Operation))
-    })
+  const checkAnswer = (value: string): void => {
+    const newAnswer = Number.parseInt(value)
+    setAnswer(newAnswer)
+    if (newAnswer === calculateResult()) {
+      setState({
+        showPreviousAnswer: false,
+        correctAnswers: (state.correctAnswers ? state.correctAnswers + 1 : 1)
+      })
+    } else {
+      setState({ 
+        showPreviousAnswer: true
+      })
+    }
   }
 
-  const checkAnswer = (value: string): void => {
-    if (Number.parseInt(value) === calculateResult()) 
-      setCorrectAnswers(correctAnswers + 1)
-  }
+  useEffect(() => { 
+    const newCalculation = (maxValue: number): void => {
+      setCalculation({ 
+        leftVal: getRandomNumber(maxValue),
+        rightVal: getRandomNumber(maxValue),
+        operation: operator(randomEnum(Operation))
+      })
+    }
+  
+    newCalculation(20) 
+  }, [state.correctAnswers])
 
   return (
     <div>
       <div>
         {calculation.operation && (
-          `${calculation.leftVal} ${calculation.operation?.str} ${calculation.rightVal}`
+          `${calculation.leftVal} ${calculation.operation?.str} ${calculation.rightVal} =`
         )}
       </div>
       <div>
         <ResultForm checkAnswer={checkAnswer} />
       </div>
       <div>
-        {`Correct antwoorden: ${correctAnswers}`}
+        {state.showPreviousAnswer && 
+          `Helaas ${prevAnswer} was niet goed, probeer het nog eens!`
+        }
+        {!state.showPreviousAnswer && state.correctAnswers !== 0 &&
+          `Jaaa, je antwoord was goed!`
+        }
       </div>
       <div>
-        <button onClick={newCalculation}>{"New"}</button>
-        <button onClick={calculateResult}>{"Show result"}</button>
+        {`Correct antwoorden: ${state.correctAnswers}`}
       </div>
     </div>
   )
