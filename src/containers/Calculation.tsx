@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { ResultForm } from './ResultForm';
 
 function randomEnum<T>(anEnum: T): T[keyof T] {
   const enumValues = Object.keys(anEnum)
@@ -18,21 +19,31 @@ interface CalculationState {
 }
 
 export const Calculation: React.FC = () => {
-  const [calculation, setCalculation] = useState<CalculationState>({ leftVal: 0, rightVal: 0, operation: undefined })
-  const [result, setResult] = useState<number | undefined>()
-  
   enum Operation { Add, Sub }
 
   const sum = (leftVal: number, rightVal: number): number => leftVal + rightVal
   const sub = (leftVal: number, rightVal: number): number => leftVal - rightVal
+
+  const getRandomNumber = (maxValue: number) =>
+    Math.floor(Math.random() * maxValue)
 
   const operator = (op: Operation) => {
     if (op === Operation.Add) return { fn: sum, str: "+" }
     return { fn: sub, str: "-" }
   }
 
-  const getRandomNumber = (maxValue: number) =>
-    Math.floor(Math.random() * maxValue)
+  const [calculation, setCalculation] = useState<CalculationState>({ 
+    leftVal: getRandomNumber(20),
+    rightVal: getRandomNumber(20),
+    operation: operator(randomEnum(Operation))
+  })
+  const [correctAnswers, setCorrectAnswers] = useState<number>(0)
+  
+  const calculateResult = (): number | null => {
+    if (calculation.operation)
+      return calculation.operation.fn(calculation.leftVal, calculation.rightVal)
+    return null
+  }
 
   const newCalculation = (): void => {
     setCalculation({ 
@@ -42,11 +53,9 @@ export const Calculation: React.FC = () => {
     })
   }
 
-  const calculateResult = () => {
-    if (calculation.operation)
-      setResult(
-        calculation.operation.fn(calculation.leftVal, calculation.rightVal)
-      )
+  const checkAnswer = (value: string): void => {
+    if (Number.parseInt(value) === calculateResult()) 
+      setCorrectAnswers(correctAnswers + 1)
   }
 
   return (
@@ -57,9 +66,10 @@ export const Calculation: React.FC = () => {
         )}
       </div>
       <div>
-        {result && 
-          `${result}`
-        }
+        <ResultForm checkAnswer={checkAnswer} />
+      </div>
+      <div>
+        {`Correct antwoorden: ${correctAnswers}`}
       </div>
       <div>
         <button onClick={newCalculation}>{"New"}</button>
