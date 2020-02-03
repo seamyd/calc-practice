@@ -1,32 +1,12 @@
-import React, { useState, useReducer, useEffect, useRef } from 'react';
-import { ResultForm } from './ResultForm';
-
-function randomEnum<T>(anEnum: T): T[keyof T] {
-  const enumValues = Object.keys(anEnum)
-    .map(n => Number.parseInt(n))
-    .filter(n => !Number.isNaN(n)) as unknown as T[keyof T][]
-  const randomIndex = Math.floor(Math.random() * enumValues.length)
-  return enumValues[randomIndex]
-}
-
-function usePrevious<T>(value: T) {
-  const ref = useRef<T>()
-  useEffect(() => {
-    ref.current = value
-  })
-  return ref.current
-}
+import React, { useState, useReducer, useEffect, useRef } from 'react'
+import { add, sub } from '../lib/math'
+import { getRandomEnum, getRandomNumber } from '../lib/random'
+import { ResultForm } from './ResultForm'
 
 enum Operation { Add, Sub }
 
-const getRandomNumber = (maxValue: number) =>
-  Math.floor(Math.random() * maxValue)
-
-const sum = (leftVal: number, rightVal: number): number => leftVal + rightVal
-const sub = (leftVal: number, rightVal: number): number => leftVal - rightVal
-
 const operator = (op: Operation) => {
-  if (op === Operation.Add) return { fn: sum, str: "+" }
+  if (op === Operation.Add) return { fn: add, str: "+" }
   return { fn: sub, str: "-" }
 }
 
@@ -40,7 +20,7 @@ interface CalculationState {
 }
 
 interface State {
-  showPreviousAnswer: boolean
+  showIncorrectAnswer: boolean
   correctAnswers?: number
 }
 
@@ -48,14 +28,13 @@ export const Calculation: React.FC = () => {
   const [calculation, setCalculation] = useState<CalculationState>({ 
     leftVal: getRandomNumber(20),
     rightVal: getRandomNumber(20),
-    operation: operator(randomEnum(Operation))
+    operation: operator(getRandomEnum(Operation))
   })
   const [state, setState] = useReducer(
     (state: State, newState: State) => ({ ...state, ...newState }),
-    { showPreviousAnswer: false, correctAnswers: 0 }
+    { showIncorrectAnswer: false, correctAnswers: 0 }
   )
   const [answer, setAnswer] = useState<number>()
-  const prevAnswer = usePrevious<number | undefined>(answer)
 
   const calculateResult = (): number | null => {
     if (calculation.operation)
@@ -68,12 +47,12 @@ export const Calculation: React.FC = () => {
     setAnswer(newAnswer)
     if (newAnswer === calculateResult()) {
       setState({
-        showPreviousAnswer: false,
+        showIncorrectAnswer: false,
         correctAnswers: (state.correctAnswers ? state.correctAnswers + 1 : 1)
       })
     } else {
       setState({ 
-        showPreviousAnswer: true
+        showIncorrectAnswer: true
       })
     }
   }
@@ -83,7 +62,7 @@ export const Calculation: React.FC = () => {
       setCalculation({ 
         leftVal: getRandomNumber(maxValue),
         rightVal: getRandomNumber(maxValue),
-        operation: operator(randomEnum(Operation))
+        operation: operator(getRandomEnum(Operation))
       })
     }
   
@@ -101,10 +80,10 @@ export const Calculation: React.FC = () => {
         <ResultForm checkAnswer={checkAnswer} />
       </div>
       <div>
-        {state.showPreviousAnswer && 
-          `Helaas ${prevAnswer} was niet goed, probeer het nog eens!`
+        {state.showIncorrectAnswer && 
+          `Helaas ${answer} was niet goed, probeer het nog eens!`
         }
-        {!state.showPreviousAnswer && state.correctAnswers !== 0 &&
+        {!state.showIncorrectAnswer && state.correctAnswers !== 0 &&
           `Jaaa, je antwoord was goed!`
         }
       </div>
