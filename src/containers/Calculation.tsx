@@ -1,7 +1,20 @@
-import React, { useState, useReducer, useEffect, useRef } from 'react'
+import React, { useState, useReducer, useEffect } from 'react'
+import styled from 'styled-components'
 import { add, sub } from '../lib/math'
 import { getRandomEnum, getRandomNumber } from '../lib/random'
-import { ResultForm } from './ResultForm'
+import { AnswerForm } from './AnswerForm'
+
+const StyledCalculation = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 1rem;
+
+  .assignment {
+    font-size: 4rem;
+    align-self: center;
+    margin: auto;
+  }
+`
 
 enum Operation { Add, Sub }
 
@@ -70,26 +83,24 @@ export const Calculation: React.FC = () => {
   }, [state.correctAnswers])
 
   return (
-    <div>
-      <div>
+    <StyledCalculation>
+      <div className="assignment">
         {calculation.operation && (
           `${calculation.leftVal} ${calculation.operation?.str} ${calculation.rightVal} =`
         )}
       </div>
       <div>
-        <ResultForm checkAnswer={checkAnswer} />
+        <AnswerForm checkAnswer={checkAnswer} />
       </div>
       <div>
         {state.showIncorrectAnswer && 
-          `Helaas ${answer} was niet goed, probeer het nog eens!`
+          `Helaas ${answer} was niet goed`
         }
         {!state.showIncorrectAnswer && state.correctAnswers !== 0 &&
-          `Jaaa, je antwoord was goed!`
+          `Goed!`
         }
-      </div>
-      <div>
         {`Correct antwoorden: ${state.correctAnswers}`}
       </div>
-    </div>
+    </StyledCalculation>
   )
 }
