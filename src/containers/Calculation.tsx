@@ -1,5 +1,7 @@
 import React, { useState, useReducer, useEffect } from 'react'
 import styled from 'styled-components'
+import { Results } from './Results'
+import ResultsContext from '../contexts/ResultsContext'
 import { add, sub } from '../lib/math'
 import { getRandomEnum, getRandomNumber } from '../lib/random'
 import { AnswerForm } from './AnswerForm'
@@ -34,6 +36,7 @@ interface CalculationState {
 
 interface State {
   showIncorrectAnswer: boolean
+  incorrectAnswers?: number
   correctAnswers?: number
 }
 
@@ -45,7 +48,7 @@ export const Calculation: React.FC = () => {
   })
   const [state, setState] = useReducer(
     (state: State, newState: State) => ({ ...state, ...newState }),
-    { showIncorrectAnswer: false, correctAnswers: 0 }
+    { showIncorrectAnswer: false, correctAnswers: 0, incorrectAnswers: 0 }
   )
   const [answer, setAnswer] = useState<number>()
 
@@ -65,7 +68,8 @@ export const Calculation: React.FC = () => {
       })
     } else {
       setState({ 
-        showIncorrectAnswer: true
+        showIncorrectAnswer: true,
+        incorrectAnswers: (state.incorrectAnswers ? state.incorrectAnswers + 1 : 1)
       })
     }
   }
@@ -83,24 +87,26 @@ export const Calculation: React.FC = () => {
   }, [state.correctAnswers])
 
   return (
-    <StyledCalculation>
-      <div className="assignment">
-        {calculation.operation && (
-          `${calculation.leftVal} ${calculation.operation?.str} ${calculation.rightVal} =`
-        )}
-      </div>
-      <div>
-        <AnswerForm checkAnswer={checkAnswer} />
-      </div>
-      <div>
-        {state.showIncorrectAnswer && 
-          `Helaas ${answer} was niet goed`
-        }
-        {!state.showIncorrectAnswer && state.correctAnswers !== 0 &&
-          `Goed!`
-        }
-        {`Correct antwoorden: ${state.correctAnswers}`}
-      </div>
-    </StyledCalculation>
+    <ResultsContext.Provider value={{ 
+      correct: state.correctAnswers,
+      incorrect: state.incorrectAnswers 
+    }}>
+      <StyledCalculation> 
+        <div className="assignment">
+          {calculation.operation && (
+            `${calculation.leftVal} ${calculation.operation?.str} ${calculation.rightVal} =`
+          )}
+        </div>
+        <div>
+          <AnswerForm checkAnswer={checkAnswer} />
+        </div>
+        <div>
+          {state.showIncorrectAnswer && 
+            `Helaas ${answer} was niet goed`
+          }
+        </div>
+        <Results />
+      </StyledCalculation>
+    </ResultsContext.Provider>
   )
 }
