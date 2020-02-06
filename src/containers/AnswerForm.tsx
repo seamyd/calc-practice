@@ -79,7 +79,7 @@ export const AnswerForm: React.FC<Props> = ({ checkAnswer }) => {
             autoComplete="off"
             onChange={handleChange} />
         </label>
-        <input type="submit" value="Submit" />
+        <input type="submit" value="Controleer antwoord" />
       </form>
     </StyledAnswerForm>
   );

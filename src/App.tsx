@@ -24,6 +24,9 @@ const StyledApp = styled.div`
 
 const StyledHeader = styled.header`
   border-bottom: 10px solid black;
+  h1 {
+    margin-left: 2rem;
+  }
 `;
 
 const App: React.FC = () => {

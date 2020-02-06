@@ -6,6 +6,16 @@ const StyledResults = styled.div`
   display: grid;
   grid-template-columns: repeat(2, minmax(100px, 1fr));
   grid-gap: 1rem;
+
+  .correct,
+  .incorrect {
+    width: 100px;
+  }
+
+  .value {
+    font-size: 4rem;
+    padding: auto;
+  }
 `
 
 export const Results: React.FC = () => {
@@ -15,11 +25,11 @@ export const Results: React.FC = () => {
         <StyledResults>
           <div className="correct">
             <h2>Goed</h2>
-            <div>{correct}</div>
+            <div className="value">{correct}</div>
           </div>
           <div className="incorrect">
             <h2>Fout</h2>
-            <div>{incorrect}</div>
+            <div className="value">{incorrect}</div>
           </div>
         </StyledResults>
       )}
