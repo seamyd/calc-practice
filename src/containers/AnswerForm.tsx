@@ -8,7 +8,7 @@ const StyledAnswerForm = styled.div`
 
   input[type=submit],
   input[type=button],
-  input[type=text],
+  input[type=number],
   label {
 	  color: #fff;
   }
@@ -18,7 +18,7 @@ const StyledAnswerForm = styled.div`
     margin-bottom: 10px;
   }
   
-  input[type=text] {
+  input[type=number] {
     background: transparent;
     border: none;
     font-size: 3rem;
@@ -29,7 +29,7 @@ const StyledAnswerForm = styled.div`
     font-style: italic;
   }
   
-  input[type=text]:focus {
+  input[type=number]:focus {
     border-bottom: 1px dashed #D9FFA9;
   }
 
@@ -48,11 +48,11 @@ const StyledAnswerForm = styled.div`
   }
 `
 
-interface Props {
+export interface AnswerFormProps {
   checkAnswer: (value: string) => void
 }
 
-export const AnswerForm: React.FC<Props> = ({ checkAnswer }) => {
+export const AnswerForm: React.FC<AnswerFormProps> = ({ checkAnswer }) => {
   const [formState, setFormState] = useState({ answer: "" })
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => setFormState({
@@ -72,7 +72,8 @@ export const AnswerForm: React.FC<Props> = ({ checkAnswer }) => {
         <label>
           Antwoord:
           <input
-            type="text"
+            autoFocus
+            type="number"
             id="answer"
             name="answer"
             value={formState.answer}
