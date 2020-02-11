@@ -6,5 +6,8 @@ export function getRandomEnum<T>(anEnum: T): T[keyof T] {
   return enumValues[randomIndex]
 }
 
-export const getRandomNumber = (maxValue: number) =>
+export const randomInt = (maxValue: number) =>
   Math.floor(Math.random() * maxValue)
+
+export const randomIntFromInterval = (min: number, max: number) =>
+  Math.floor(Math.random() * (max - min + 1) + min)

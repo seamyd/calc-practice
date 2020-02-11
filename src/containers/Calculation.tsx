@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { Results } from './Results'
 import ResultsContext from '../contexts/ResultsContext'
-import { getRandomEnum, getRandomNumber } from '../lib/random'
+import { getRandomEnum, randomIntFromInterval } from '../lib/random'
 import { AnswerForm } from './AnswerForm'
 
 const StyledCalculation = styled.div`
@@ -18,12 +18,7 @@ const StyledCalculation = styled.div`
 `
 
 enum Operation { Add, Sub }
-
-interface State {
-  showIncorrectAnswer: boolean
-  incorrectAnswers?: number
-  correctAnswers?: number
-}
+const [ defaultMin, defaultMax ] = [7, 30]
 
 interface Calculation { 
   leftVal: number;
@@ -31,12 +26,20 @@ interface Calculation {
   operation: Operation;
 }
 
-const maxValue = 20;
-const initialCalculation: Calculation = {
-  leftVal: getRandomNumber(maxValue),
-  rightVal: getRandomNumber(maxValue),
-  operation: getRandomEnum(Operation)
+const createCalculation = (min: number, max: number): Calculation => {
+  let [ leftVal, rightVal ] = [ 
+    randomIntFromInterval(min, max),
+    randomIntFromInterval(min, max),
+  ]
+  const operation = getRandomEnum(Operation)
+  if (operation === Operation.Sub) {
+    [ leftVal, rightVal ] = [ Math.max(leftVal, rightVal), Math.min(leftVal, rightVal) ]
+  }
+  return { leftVal, rightVal, operation }
 }
+
+const initialCalculation: Calculation = createCalculation(defaultMin, defaultMax)
+
 const operator: { [key in Operation]: string } = {
   [Operation.Add]: "+",
   [Operation.Sub]: "-"
@@ -67,11 +70,7 @@ export const Calculation: React.FC = () => {
     const answerIsCorrect: boolean = calculateResult() === parsedValue
     if (answerIsCorrect) {
       setCorrectCounter(counter => counter + 1);
-      setCalculation({
-        leftVal: getRandomNumber(maxValue),
-        rightVal: getRandomNumber(maxValue),
-        operation: getRandomEnum(Operation)
-      })
+      setCalculation(createCalculation(defaultMin, defaultMax))
       if (incorrect) setIncorrect(false);
     } else {
       setIncorrectCounter(counter => counter + 1)
