@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ResultsContext from '../contexts/ResultsContext'
 import styled from 'styled-components'
 
@@ -19,20 +19,17 @@ const StyledResults = styled.div`
 `
 
 export const Results: React.FC = () => {
+  const { correct, incorrect } = useContext(ResultsContext)
   return (
-    <ResultsContext.Consumer>
-      {({ correct, incorrect }) => (
-        <StyledResults>
-          <div className="correct">
-            <h2>Goed</h2>
-            <div className="value">{correct}</div>
-          </div>
-          <div className="incorrect">
-            <h2>Fout</h2>
-            <div className="value">{incorrect}</div>
-          </div>
-        </StyledResults>
-      )}
-    </ResultsContext.Consumer>
+    <StyledResults>
+      <div className="correct">
+        <h2>Goed</h2>
+        <div className="value">{correct}</div>
+      </div>
+      <div className="incorrect">
+        <h2>Fout</h2>
+        <div className="value">{incorrect}</div>
+      </div>
+    </StyledResults>
   )
 }

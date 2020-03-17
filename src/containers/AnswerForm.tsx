@@ -2,9 +2,8 @@ import React, { useState, FormEvent } from 'react';
 import styled from 'styled-components'
 
 const StyledAnswerForm = styled.div`
-	width: 200px;
 	font-size: 2rem;
-	padding: 15px 15px 10px 15px;
+	padding: 1.5rem 1.5rem 1rem 1.5rem;
 
   input[type=submit],
   input[type=button],
@@ -15,36 +14,37 @@ const StyledAnswerForm = styled.div`
 
   label {
     display:block;
-    margin-bottom: 10px;
+    margin-bottom: 1rem;
   }
   
   input[type=number] {
     background: transparent;
     border: none;
     font-size: 3rem;
-    border-bottom: 1px dashed #83A4C5;
-    width: 150px;
+    margin-left: 1.5rem;
+    border-bottom: 1px dashed ${({ theme }) => theme.colors.prim.dim};
+    width: 15rem;
     outline: none;
-    padding: 5px 5px 5px 5px;
+    padding: 0.5rem;
     font-style: italic;
   }
   
   input[type=number]:focus {
-    border-bottom: 1px dashed #D9FFA9;
+    border-bottom: 1px dashed ${({ theme }) => theme.colors.prim.bright};
   }
 
   input[type=submit],
   input[type=button] {
-    background: #576E86;
+    background: ${({ theme }) => theme.colors.prim.bright};
     border: none;
-    padding: 8px 10px 8px 10px;
-    border-radius: 5px;
-    color: #A8BACE;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    color: ${({ theme }) => theme.colors.compl.bright};
   }
   
   input[type=submit]:hover,
   input[type=button]:hover {
-    background: #394D61;
+    background: ${({ theme }) => theme.colors.prim.veryLight};
   }
 `
 

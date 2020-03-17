@@ -6,14 +6,14 @@ import { getRandomEnum, randomIntFromInterval } from '../lib/random'
 import { AnswerForm } from './AnswerForm'
 
 const StyledCalculation = styled.div`
+  grid-column: center-start / center-end;
+
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  grid-gap: 1rem;
+  grid-gap: 6rem;
+  grid-template-columns: repeat(3, 1fr);
 
   .assignment {
     font-size: 4rem;
-    align-self: center;
-    margin: auto;
   }
 `
 

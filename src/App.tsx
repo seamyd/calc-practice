@@ -1,29 +1,47 @@
 import React from 'react'
+import theme from './theme'
 import { Calculation } from './containers/Calculation'
 import styled, { createGlobalStyle } from 'styled-components'
 
-const GlobalStyle = createGlobalStyle`
+type ThemeType = typeof theme
+
+const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
   html {
     font-size: 10px;
   }
   body {
-    background-color: rgb(33,33,33);
+    background-color: ${({ theme }) => theme.colors.compl.dim};
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 1.6rem;
     color: white;
     height: 100%;
     width: 100%;
   }
+
+  div {
+    border: 2px solid goldenrod;
+  }
 `
 
 const StyledApp = styled.div`
   display: grid;
-  grid-template-rows: auto 1fr;
-  grid-template-columns: 1fr;
+  grid-template-rows: 10rem min-content;
+  grid-template-columns: 
+    [sidebar-start] 8rem [sidebar-end full-start] 
+    minmax(6rem, 1fr) [center-start] 
+    repeat(8, [col-start] minmax(min-content, 14rem) [col-end]) 
+    [center-end] minmax(6rem, 1fr) [full-end];
+`
+
+const StyledSidebar = styled.div`
+  grid-column: sidebar-start / sidebar-end;
+  grid-row: 1 / -1;
+  background-color: ${({ theme }) => theme.colors.prim.bright};
 `
 
 const StyledHeader = styled.header`
-  border-bottom: 10px solid black;
+  grid-column: sidebar-end / full-end;
+  border-bottom: 10px solid ${({ theme }) => theme.colors.prim.dark};
   h1 {
     margin-left: 2rem;
   }
@@ -31,11 +49,14 @@ const StyledHeader = styled.header`
 
 const App: React.FC = () => {
   return (
-    <StyledApp>
+    <>
       <GlobalStyle />
-      <StyledHeader><h1>Leer rekenen</h1></StyledHeader>
-      <Calculation />
-    </StyledApp>
+      <StyledApp>
+        <StyledHeader><h1>Leer rekenen</h1></StyledHeader>
+        <StyledSidebar />
+        <Calculation />
+      </StyledApp>
+    </>
   );
 }
 
