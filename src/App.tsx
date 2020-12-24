@@ -10,16 +10,12 @@ const GlobalStyle = createGlobalStyle<{ theme: ThemeType }>`
     font-size: 10px;
   }
   body {
-    background-color: ${({ theme }) => theme.colors.compl.dim};
+    background-color: ${({ theme }) => theme.colors.compl.light};
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 1.6rem;
     color: white;
     height: 100%;
     width: 100%;
-  }
-
-  div {
-    border: 2px solid goldenrod;
   }
 `
 
@@ -31,12 +27,14 @@ const StyledApp = styled.div`
     minmax(6rem, 1fr) [center-start] 
     repeat(8, [col-start] minmax(min-content, 14rem) [col-end]) 
     [center-end] minmax(6rem, 1fr) [full-end];
+
+  border-bottom: 10px solid ${({ theme }) => theme.colors.prim.dark};
 `
 
 const StyledSidebar = styled.div`
   grid-column: sidebar-start / sidebar-end;
   grid-row: 1 / -1;
-  background-color: ${({ theme }) => theme.colors.prim.bright};
+  background-color: ${({ theme }) => theme.colors.prim.dark};
 `
 
 const StyledHeader = styled.header`
@@ -52,7 +50,7 @@ const App: React.FC = () => {
     <>
       <GlobalStyle />
       <StyledApp>
-        <StyledHeader><h1>Leer rekenen</h1></StyledHeader>
+        <StyledHeader><h1>Rekenen oefenen</h1></StyledHeader>
         <StyledSidebar />
         <Calculation />
       </StyledApp>

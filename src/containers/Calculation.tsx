@@ -10,11 +10,26 @@ const StyledCalculation = styled.div`
 
   display: grid;
   grid-gap: 6rem;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(fitcontent, 1fr));
+  grid-template-rows: repeat(3, minmax(fitcontent, 1fr));
+`
 
-  .assignment {
-    font-size: 4rem;
-  }
+const StyledAssignement = styled.div`
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  font-size: 4rem;
+`
+
+const StyledAnswer = styled.div`
+  grid-column: 2 / 3;
+  grid-row: 2 / 3;
+  font-size: 4rem;
+`
+
+const StyledFeedback = styled.div`
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+  font-size: 2rem;
 `
 
 enum Operation { Add, Sub }
@@ -84,18 +99,18 @@ export const Calculation: React.FC = () => {
       incorrect: incorrectCounter 
     }}>
       <StyledCalculation> 
-        <div className="assignment">
+        <Results />
+        <StyledAssignement>
             {`${leftVal} ${operator[operation]} ${rightVal} =`}
-        </div>
-        <div>
+        </StyledAssignement>
+        <StyledAnswer>
           <AnswerForm checkAnswer={checkAnswer} />
-        </div>
-        <div>
+        </StyledAnswer>
+        <StyledFeedback>
           {incorrect && 
             `Helaas ${answer} was niet goed`
           }
-        </div>
-        <Results />
+        </StyledFeedback>
       </StyledCalculation>
     </ResultsContext.Provider>
   )
