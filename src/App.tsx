@@ -48,7 +48,7 @@ const StyledHeader = styled.header`
 const App: React.FC = () => {
   return (
     <>
-      <GlobalStyle />
+      <GlobalStyle theme={theme} />
       <StyledApp>
         <StyledHeader><h1>Rekenen oefenen</h1></StyledHeader>
         <StyledSidebar />

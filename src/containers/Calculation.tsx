@@ -35,13 +35,13 @@ const StyledFeedback = styled.div`
 enum Operation { Add, Sub }
 const [ defaultMin, defaultMax ] = [7, 30]
 
-interface Calculation { 
+interface ICalculation { 
   leftVal: number;
   rightVal: number;
   operation: Operation;
 }
 
-const createCalculation = (min: number, max: number): Calculation => {
+const createCalculation = (min: number, max: number): ICalculation => {
   let [ leftVal, rightVal ] = [ 
     randomIntFromInterval(min, max),
     randomIntFromInterval(min, max),
@@ -53,7 +53,7 @@ const createCalculation = (min: number, max: number): Calculation => {
   return { leftVal, rightVal, operation }
 }
 
-const initialCalculation: Calculation = createCalculation(defaultMin, defaultMax)
+const initialCalculation: ICalculation = createCalculation(defaultMin, defaultMax)
 
 const operator: { [key in Operation]: string } = {
   [Operation.Add]: "+",
@@ -65,7 +65,7 @@ export const Calculation: React.FC = () => {
   const [correctCounter, setCorrectCounter] = useState<number>(0);
   const [incorrectCounter, setIncorrectCounter] = useState<number>(0);
   const [incorrect, setIncorrect] = useState<boolean>(false);
-  const [calculation, setCalculation] = useState<Calculation>(initialCalculation)
+  const [calculation, setCalculation] = useState<ICalculation>(initialCalculation)
   const { leftVal, rightVal, operation } = calculation;
 
   const calculateResult = (): number => {
