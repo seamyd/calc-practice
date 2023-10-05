@@ -18,11 +18,11 @@ const StyledAnswerForm = styled.div`
   }
   
   input[type=number] {
-    background: transparent;
+    background: ${({ theme }) => theme.colors.compl.light};
     border: none;
     font-size: 3rem;
     margin-left: 1.5rem;
-    border-bottom: 1px dashed ${({ theme }) => theme.colors.prim.dim};
+    border: 2px solid ${({ theme }) => theme.colors.compl.dim};
     width: 15rem;
     outline: none;
     padding: 0.5rem;
@@ -30,7 +30,7 @@ const StyledAnswerForm = styled.div`
   }
   
   input[type=number]:focus {
-    border-bottom: 1px dashed ${({ theme }) => theme.colors.prim.bright};
+    border: 3px solid ${({ theme }) => theme.colors.compl.dark};
   }
 
   input[type=submit],

@@ -29,7 +29,7 @@ const StyledAnswer = styled.div`
 const StyledFeedback = styled.div`
   grid-column: 2 / 3;
   grid-row: 1 / 2;
-  font-size: 2rem;
+  font-size: 3rem;
 `
 
 enum Operation { Add, Sub }
@@ -107,9 +107,7 @@ export const Calculation: React.FC = () => {
           <AnswerForm checkAnswer={checkAnswer} />
         </StyledAnswer>
         <StyledFeedback>
-          {incorrect && 
-            `Helaas ${answer} was niet goed`
-          }
+          {incorrect ? `Helaas ${answer} was niet goed` : 'Dat is correct! Geweldig gedaan!'}
         </StyledFeedback>
       </StyledCalculation>
     </ResultsContext.Provider>
